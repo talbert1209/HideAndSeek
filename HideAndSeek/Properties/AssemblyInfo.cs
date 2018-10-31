@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("HideAndSeek")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DentaQuest")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("HideAndSeek")]
-[assembly: AssemblyCopyright("Copyright © DentaQuest 2018")]
+[assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

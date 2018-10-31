@@ -25,8 +25,8 @@ namespace HideAndSeek
             _frontYard = new OutsideWithDoor("Front Yard", false, "An Oak Door With A Brass Knob");
             _backYard = new OutsideWithDoor("Back Yard", true, "A Screen Door");
             _garden = new Outside("Garden", false);
-            _livingRoom = new RoomWithDoor("Living Room", "Antique Carpet", "An Oak Door With A Brass Knob");
-            _kitchen = new RoomWithDoor("Kitchen", "Stainless Steel appliances", "A Screen Door");
+            _livingRoom = new RoomWithDoor("Living Room", "Antique Carpet", "Hiding Placeholder", "An Oak Door With A Brass Knob");
+            _kitchen = new RoomWithDoor("Kitchen", "Stainless Steel appliances", "Hiding Placeholder", "A Screen Door");
             _diningRoom = new Room("Dining Room", "Crystal Chandelier");
 
             _frontYard.Exits = new Location[] {_backYard, _garden};
