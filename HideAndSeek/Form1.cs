@@ -75,5 +75,15 @@ namespace HideAndSeek
             if (_currentLocation is IHasExteriorDoor currentDoorLocation)
                 MoveToANewLocation(currentDoorLocation.DoorLocation);
         }
+
+        private void check_Click(object sender, System.EventArgs e)
+        {
+
+        }
+
+        private void hide_Click(object sender, System.EventArgs e)
+        {
+
+        }
     }
 }

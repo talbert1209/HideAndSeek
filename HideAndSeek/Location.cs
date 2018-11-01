@@ -25,7 +25,7 @@
         }
 
         //Constructor
-        public Location(string name)
+        protected Location(string name)
         {
             Name = name;
         }
