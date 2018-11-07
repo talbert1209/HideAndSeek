@@ -1,4 +1,5 @@
-﻿using System.Windows.Forms;
+﻿using System.Threading;
+using System.Windows.Forms;
 
 namespace HideAndSeek
 {
@@ -6,40 +7,62 @@ namespace HideAndSeek
     {
         private OutsideWithDoor _frontYard;
         private OutsideWithDoor _backYard;
-        private Outside _garden;
+        private OutsideWithHidingPlace _garden;
         private RoomWithDoor _livingRoom;
         private RoomWithDoor _kitchen;
         private Room _diningRoom;
+        private Room _stairs;
+        private RoomWithHidingPlace _upstairsHallway;
+        private RoomWithHidingPlace _masterBedroom;
+        private RoomWithHidingPlace _secondBedroom;
+        private RoomWithHidingPlace _bathroom;
+        private OutsideWithHidingPlace _driveway;
 
         private Location _currentLocation;
+        private Opponent _opponent;
 
         public Form1()
         {
             InitializeComponent();
             CreateObjects();
             MoveToANewLocation(_frontYard);
+
         }
 
         public void CreateObjects()
         {
             _frontYard = new OutsideWithDoor("Front Yard", false, "An Oak Door With A Brass Knob");
             _backYard = new OutsideWithDoor("Back Yard", true, "A Screen Door");
-            _garden = new Outside("Garden", false);
-            _livingRoom = new RoomWithDoor("Living Room", "Antique Carpet", "Hiding Placeholder", "An Oak Door With A Brass Knob");
-            _kitchen = new RoomWithDoor("Kitchen", "Stainless Steel appliances", "Hiding Placeholder", "A Screen Door");
+            _garden = new OutsideWithHidingPlace("Garden", false, "Shed");
+            _livingRoom = new RoomWithDoor("Living Room", "Antique Carpet", "Behind the TV", "An Oak Door With A Brass Knob");
+            _kitchen = new RoomWithDoor("Kitchen", "Stainless Steel appliances", "Refrigerator", "A Screen Door");
             _diningRoom = new Room("Dining Room", "Crystal Chandelier");
+            _stairs = new Room("Stairs", "Wooden banister");
+            _upstairsHallway = new RoomWithHidingPlace("Upstairs Hallway", "Picture of a Dog", "Closet");
+            _masterBedroom = new RoomWithHidingPlace("Master Bedroom", "Large Bed", "Under the Bed");
+            _secondBedroom = new RoomWithHidingPlace("Second Bedroom", "Small Bed", "Under the Bed");
+            _bathroom = new RoomWithHidingPlace("Bathroom", "Sink and Toilet", "Shower");
+            _driveway = new OutsideWithHidingPlace("Driveway", true, "Garage");
 
-            _frontYard.Exits = new Location[] {_backYard, _garden};
-            _backYard.Exits = new Location[] {_frontYard, _garden};
+            _frontYard.Exits = new Location[] {_backYard, _garden, _driveway};
+            _backYard.Exits = new Location[] {_frontYard, _garden, _driveway};
             _garden.Exits = new Location[] {_frontYard, _backYard};
-            _livingRoom.Exits = new Location[] {_diningRoom};
+            _livingRoom.Exits = new Location[] {_diningRoom, _stairs};
             _kitchen.Exits = new Location[] {_diningRoom};
             _diningRoom.Exits = new Location[] {_livingRoom, _kitchen};
+            _stairs.Exits = new Location[] {_livingRoom, _upstairsHallway};
+            _upstairsHallway.Exits = new Location[] {_stairs, _masterBedroom, _secondBedroom, _bathroom};
+            _masterBedroom.Exits = new Location[] {_upstairsHallway};
+            _secondBedroom.Exits = new Location[] {_upstairsHallway};
+            _bathroom.Exits = new Location[] {_upstairsHallway};
+            _driveway.Exits = new Location[] {_frontYard, _backYard};
 
             _frontYard.DoorLocation = _livingRoom;
             _livingRoom.DoorLocation = _frontYard;
             _backYard.DoorLocation = _kitchen;
             _kitchen.DoorLocation = _backYard;
+
+            _opponent = new Opponent(_frontYard);
         }
 
         public void MoveToANewLocation(Location newLocation)
@@ -63,6 +86,15 @@ namespace HideAndSeek
             {
                 goThroughTheDoor.Enabled = false;
             }
+
+            if (_currentLocation is IHidingPlace)
+            {
+                check.Enabled = true;
+            }
+            else
+            {
+                check.Enabled = false;
+            }
         }
 
         private void goHere_Click(object sender, System.EventArgs e)
@@ -83,7 +115,17 @@ namespace HideAndSeek
 
         private void hide_Click(object sender, System.EventArgs e)
         {
+            hide.Enabled = false;
 
+            for (int i = 1; i < 11; i++)
+            {
+                _opponent.Move();
+                description.Text = $@"{i}...";
+                Application.DoEvents();
+                Thread.Sleep(2000);
+            }
+
+            description.Text = @"Ready or not here I come!";
         }
     }
 }
