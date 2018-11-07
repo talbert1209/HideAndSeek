@@ -66,6 +66,7 @@
             // 
             // description
             // 
+            this.description.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.description.Location = new System.Drawing.Point(12, 12);
             this.description.Multiline = true;
             this.description.Name = "description";

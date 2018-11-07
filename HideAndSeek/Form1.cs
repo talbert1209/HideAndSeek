@@ -21,6 +21,8 @@ namespace HideAndSeek
         private Location _currentLocation;
         private Opponent _opponent;
 
+        private int _moves;
+
         public Form1()
         {
             InitializeComponent();
@@ -68,6 +70,50 @@ namespace HideAndSeek
         public void MoveToANewLocation(Location newLocation)
         {
             _currentLocation = newLocation;
+            RedrawForm();
+        }
+
+        private void goHere_Click(object sender, System.EventArgs e)
+        {
+            _moves++;
+            MoveToANewLocation(_currentLocation.Exits[exits.SelectedIndex]);
+        }
+
+        private void goThroughTheDoor_Click(object sender, System.EventArgs e)
+        {
+            _moves++;
+            if (_currentLocation is IHasExteriorDoor currentDoorLocation)
+                MoveToANewLocation(currentDoorLocation.DoorLocation);
+        }
+
+        private void check_Click(object sender, System.EventArgs e)
+        {
+            _moves ++;
+            if (_opponent.Check(_currentLocation) && (_currentLocation is IHidingPlace))
+            {
+                var hidingPlace = (IHidingPlace)_currentLocation;
+                MessageBox.Show($@"You found me in {_moves} moves!");
+                ResetGame();
+            }
+            else
+            {
+                description.Text = @"Not here!";
+                Application.DoEvents();
+                Thread.Sleep(2000);
+                description.Text = _currentLocation.Description;
+            }
+            
+        }
+
+        public void ResetGame()
+        {
+            _moves = 0;
+            _opponent.Reset();
+            MoveToANewLocation(_frontYard);
+        }
+
+        public void RedrawForm()
+        {
             exits.Items.Clear();
             foreach (var exit in _currentLocation.Exits)
             {
@@ -89,27 +135,30 @@ namespace HideAndSeek
 
             if (_currentLocation is IHidingPlace)
             {
+                var currentLocationsHidingPlace = (IHidingPlace)_currentLocation;
                 check.Enabled = true;
+                check.Text = $@"Check {currentLocationsHidingPlace.HidingPlace}";
             }
             else
             {
                 check.Enabled = false;
             }
-        }
 
-        private void goHere_Click(object sender, System.EventArgs e)
-        {
-            MoveToANewLocation(_currentLocation.Exits[exits.SelectedIndex]);
-        }
-
-        private void goThroughTheDoor_Click(object sender, System.EventArgs e)
-        {
-            if (_currentLocation is IHasExteriorDoor currentDoorLocation)
-                MoveToANewLocation(currentDoorLocation.DoorLocation);
-        }
-
-        private void check_Click(object sender, System.EventArgs e)
-        {
+            if (!_opponent.Hidden)
+            {
+                goHere.Enabled = false;
+                exits.Enabled = false;
+                goThroughTheDoor.Enabled = false;
+                check.Enabled = false;
+                description.Text = "";
+                hide.Enabled = true;
+            }
+            else
+            {
+                hide.Enabled = false;
+                goHere.Enabled = true;
+                exits.Enabled = true;
+            }
 
         }
 
@@ -122,10 +171,13 @@ namespace HideAndSeek
                 _opponent.Move();
                 description.Text = $@"{i}...";
                 Application.DoEvents();
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
             }
 
             description.Text = @"Ready or not here I come!";
+            Application.DoEvents();
+            Thread.Sleep(2000);
+            RedrawForm();
         }
     }
 }
