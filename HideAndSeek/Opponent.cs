@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
+using System.Windows.Forms;
 
 namespace HideAndSeek
 {
@@ -23,13 +24,14 @@ namespace HideAndSeek
 
         public void Move()
         {
-            
+
+            //var coinFlip = random.Next(4);
+
             if (myLocation is IHasExteriorDoor)
             {
-                var coinFlip = random.Next(4);
-                if ((coinFlip == 1) || (coinFlip == 3))
+                if (random.Next(2) == 1)
                 {
-                    var myLocationWithDoor = (IHasExteriorDoor) myLocation;
+                    var myLocationWithDoor = (IHasExteriorDoor)myLocation;
                     myLocation = myLocationWithDoor.DoorLocation;
                 }
             }
@@ -41,7 +43,7 @@ namespace HideAndSeek
             }
 
             Hidden = true;
-            
+
         }
 
         public bool Check(Location location)
