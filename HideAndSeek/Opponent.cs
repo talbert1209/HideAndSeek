@@ -24,7 +24,6 @@ namespace HideAndSeek
 
         public void Move()
         {
-
             var coinFlip = random.Next(2);
 
             if (myLocation is IHasExteriorDoor)
