@@ -25,11 +25,11 @@ namespace HideAndSeek
         public void Move()
         {
 
-            //var coinFlip = random.Next(4);
+            var coinFlip = random.Next(2);
 
             if (myLocation is IHasExteriorDoor)
             {
-                if (random.Next(2) == 1)
+                if (coinFlip == 1)
                 {
                     var myLocationWithDoor = (IHasExteriorDoor)myLocation;
                     myLocation = myLocationWithDoor.DoorLocation;
